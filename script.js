@@ -190,7 +190,6 @@ function renderQuestionReadOnly(question) {
       <strong class="question-title">
         ${escapeHtml(question.question)}
         <span class="question-type-badge">${getTypeLabel(question)}</span>
-        ${question.generated ? '<span class="question-type-badge generated-badge">сгенерировано</span>' : ""}
       </strong>
       ${renderMedia(question.media)}
       <div class="options">${answers}</div>
@@ -225,7 +224,6 @@ function renderTest(questions) {
         <strong class="question-title">
           ${index + 1}. ${escapeHtml(question.question)}
           <span class="question-type-badge">${getTypeLabel(question)}</span>
-          ${question.generated ? '<span class="question-type-badge generated-badge">сгенерировано</span>' : ""}
         </strong>
         ${renderMedia(question.media)}
         <div class="options">${inputs}</div>
@@ -671,7 +669,7 @@ function isClosedQuestion(question) {
 }
 
 function isMediaQuestion(question) {
-  return Boolean(question.media || question.generated);
+  return Boolean(question.mediaQuestion || question.media);
 }
 
 function isOpenAnswerCorrect(question, answer) {
