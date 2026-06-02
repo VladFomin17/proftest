@@ -1,0 +1,528 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --blue: #0055ff;
+  --blue-dark: #003bb3;
+  --ink: #162033;
+  --muted: #607089;
+  --line: #d8e2f7;
+  --soft: #f4f7ff;
+  --white: #ffffff;
+  --danger: #b91c1c;
+  --success: #15803d;
+}
+
+body {
+  min-height: 100vh;
+  padding: 18px;
+  background: linear-gradient(140deg, #eef4ff 0%, #dce8ff 48%, #f7f9ff 100%);
+  color: var(--ink);
+  font-family: "Rubik", system-ui, sans-serif;
+}
+
+.app {
+  width: min(980px, 100%);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 22px;
+  border: 1px solid rgba(0, 85, 255, 0.16);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 20px 45px rgba(36, 64, 118, 0.14);
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.logo-img {
+  width: 82px;
+  height: 82px;
+  flex: 0 0 auto;
+  object-fit: contain;
+  border: 2px solid var(--blue);
+  border-radius: 8px;
+  background: var(--white);
+  box-shadow: 0 8px 22px rgba(0, 85, 255, 0.22);
+}
+
+.eyebrow {
+  margin-bottom: 4px;
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+h1,
+h2 {
+  color: var(--blue-dark);
+  font-family: "Marck Script", cursive;
+  font-weight: 400;
+}
+
+h1 {
+  font-size: clamp(2.5rem, 8vw, 4.5rem);
+  line-height: 0.95;
+}
+
+h2 {
+  margin-bottom: 16px;
+  font-size: 2.6rem;
+}
+
+.icon-nav {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--soft);
+  flex-wrap: wrap;
+}
+
+.nav-icon {
+  width: 50px;
+  height: 50px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 8px;
+  background: var(--white);
+  color: #4b5563;
+  cursor: pointer;
+  transition: transform 0.18s, background 0.18s, color 0.18s, box-shadow 0.18s;
+}
+
+.nav-icon svg {
+  width: 28px;
+  height: 28px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+}
+
+.nav-icon:hover,
+.nav-icon.active {
+  background: var(--blue);
+  color: var(--white);
+  box-shadow: 0 9px 20px rgba(0, 85, 255, 0.26);
+  transform: translateY(-1px);
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+  animation: fade 0.22s ease-out;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0.3;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card,
+.question-block,
+.accordion-header,
+.result-box,
+.error-list,
+.media-card {
+  border-radius: 8px;
+}
+
+.card {
+  margin-bottom: 14px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  background: var(--soft);
+}
+
+.centered {
+  text-align: center;
+}
+
+.muted,
+.section-note {
+  color: var(--muted);
+}
+
+.section-note {
+  margin-bottom: 14px;
+  font-weight: 500;
+}
+
+.faces-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 14px;
+}
+
+.face-card {
+  min-height: 210px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--white);
+  text-align: center;
+}
+
+.face-photo-circle {
+  width: 96px;
+  height: 96px;
+  margin: 0 auto 12px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--soft);
+}
+
+.face-photo-circle::before {
+  content: "👤";
+  font-size: 2.2rem;
+}
+
+.face-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.face-img[src=""],
+.face-img:not([src]) {
+  display: none;
+}
+
+.face-name {
+  margin-bottom: 8px;
+  color: var(--blue-dark);
+  font-weight: 600;
+}
+
+.face-position {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.accordion-header {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 14px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid var(--line);
+  background: #edf3ff;
+  color: var(--blue-dark);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+}
+
+.accordion-content {
+  display: none;
+  margin-bottom: 16px;
+}
+
+.accordion-content.open {
+  display: block;
+}
+
+.question-block {
+  margin-bottom: 12px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  background: var(--white);
+}
+
+.question-title {
+  display: block;
+  margin-bottom: 12px;
+  line-height: 1.45;
+}
+
+.question-type-badge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: #e0eaff;
+  color: var(--blue-dark);
+  font-size: 0.75rem;
+  font-weight: 600;
+  vertical-align: middle;
+}
+
+.generated-badge {
+  background: #fff6d7;
+  color: #8a5b00;
+}
+
+.media-card {
+  margin: 10px 0 12px;
+  padding: 12px;
+  border: 1px solid #bfd1f5;
+  background: #f8fbff;
+}
+
+.media-card strong {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--blue-dark);
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.option-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f8faff;
+  color: var(--ink);
+  cursor: pointer;
+  line-height: 1.35;
+}
+
+.option-item.correct {
+  background: #e8f8ee;
+  border-color: #a7ddb7;
+}
+
+.option-item input {
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  flex: 0 0 auto;
+  accent-color: var(--blue);
+}
+
+.open-answer-input,
+.biathlon-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f8faff;
+  color: var(--ink);
+  font: inherit;
+}
+
+.open-answer-input:focus,
+.biathlon-input:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(0, 85, 255, 0.14);
+  outline: none;
+}
+
+button {
+  padding: 12px 20px;
+  border: 0;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+  color: var(--white);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  transition: transform 0.18s, box-shadow 0.18s;
+}
+
+button:hover {
+  box-shadow: 0 9px 20px rgba(0, 85, 255, 0.22);
+  transform: translateY(-1px);
+}
+
+button.secondary {
+  border: 1px solid var(--blue);
+  background: var(--white);
+  color: var(--blue-dark);
+}
+
+.test-mode-selector {
+  margin-bottom: 16px;
+  padding: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--soft);
+  flex-wrap: wrap;
+}
+
+.test-mode-selector label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--blue-dark);
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.selector-divider {
+  width: 1px;
+  height: 26px;
+  background: var(--line);
+}
+
+.start-card-text,
+.biathlon-start-text {
+  margin-bottom: 18px;
+  line-height: 1.5;
+}
+
+.timer-container {
+  width: fit-content;
+  margin: 0 auto 14px;
+  display: none;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: var(--blue-dark);
+  color: var(--white);
+  font-weight: 600;
+}
+
+.timer-container.warning {
+  background: var(--danger);
+}
+
+.result-box {
+  margin-top: 18px;
+  padding: 18px;
+  border: 1px solid #99b3ff;
+  background: var(--soft);
+}
+
+.result-box.success {
+  border-color: #a7ddb7;
+  background: #e8f8ee;
+}
+
+.error-list {
+  margin-top: 14px;
+  padding: 16px;
+  border: 1px solid #f2b49f;
+  background: #fff7f3;
+}
+
+.error-item {
+  padding-top: 12px;
+  margin-top: 12px;
+  border-top: 1px solid #f2d2c6;
+}
+
+.error-item:first-of-type {
+  border-top: 0;
+}
+
+.wrong {
+  color: var(--danger);
+}
+
+.right {
+  color: var(--success);
+}
+
+.flex-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.biathlon-timer {
+  margin-bottom: 10px;
+  color: var(--blue-dark);
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.biathlon-input {
+  margin: 10px 0;
+}
+
+.scroll-to-top {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  border-radius: 50%;
+  box-shadow: 0 9px 22px rgba(0, 85, 255, 0.3);
+}
+
+[hidden] {
+  display: none !important;
+}
+
+@media (max-width: 640px) {
+  body {
+    padding: 10px;
+  }
+
+  .app {
+    padding: 16px;
+  }
+
+  .app-header {
+    align-items: flex-start;
+  }
+
+  .logo-img {
+    width: 68px;
+    height: 68px;
+  }
+
+  .selector-divider {
+    width: 100%;
+    height: 1px;
+  }
+
+  .flex-row,
+  .test-mode-selector {
+    align-items: stretch;
+  }
+
+  .flex-row button,
+  .test-mode-selector label {
+    width: 100%;
+    justify-content: center;
+  }
+}
