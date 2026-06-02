@@ -4,6 +4,8 @@ const state = {
   allQuestions: [],
   closedQuestions: [],
   openQuestions: [],
+  mediaQuestions: [],
+  nonMediaQuestions: [],
   currentTestQuestions: [],
   testActive: false,
   testTimer: null,
@@ -35,6 +37,8 @@ async function init() {
     state.allQuestions = getUniqueQuestions(state.groups.flatMap((group) => group.questions || []));
     state.closedQuestions = state.allQuestions.filter(isClosedQuestion);
     state.openQuestions = state.allQuestions.filter((question) => question.type === "open");
+    state.mediaQuestions = state.allQuestions.filter(isMediaQuestion);
+    state.nonMediaQuestions = state.allQuestions.filter((question) => !isMediaQuestion(question));
 
     renderInfo();
     renderFaces();
@@ -119,10 +123,10 @@ function switchTab(tabId) {
 function renderInfo() {
   const totalGroups = state.groups.length;
   const totalQuestions = state.allQuestions.length;
-  const generatedCount = state.allQuestions.filter((question) => question.generated).length;
+  const mediaCount = state.mediaQuestions.length;
 
   els.projectDescription.textContent = state.data.project?.description || "Тренажер профтеста.";
-  els.loadStatus.textContent = `Загружено групп: ${totalGroups}. Уникальных вопросов: ${totalQuestions}. Тренировочных медиавопросов: ${generatedCount}.`;
+  els.loadStatus.textContent = `Загружено групп: ${totalGroups}. Уникальных вопросов: ${totalQuestions}. Медиавопросов: ${mediaCount}.`;
 }
 
 function renderFaces() {
@@ -270,7 +274,8 @@ function startNewTest() {
 
   const mode = getSelectedValue("testMode", "mixed");
   const count = Number(getSelectedValue("questionCount", "20"));
-  state.currentTestQuestions = generateTestByMode(mode, count);
+  const includeMedia = getCheckedValue("includeMedia");
+  state.currentTestQuestions = generateTestByMode(mode, count, includeMedia);
 
   if (!state.currentTestQuestions.length) {
     alert("В выбранном режиме нет вопросов. Выберите другой режим.");
@@ -587,15 +592,25 @@ function resetBiathlon() {
   els.biathlonStartCard.hidden = false;
 }
 
-function generateTestByMode(mode, count) {
-  let pool = state.allQuestions;
-  if (mode === "closed") {
-    pool = state.closedQuestions;
-  } else if (mode === "open") {
-    pool = state.openQuestions;
+function generateTestByMode(mode, count, includeMedia) {
+  const regularPool = filterQuestionsByMode(state.nonMediaQuestions, mode);
+
+  if (includeMedia) {
+    const mediaCount = Math.floor(count / 2);
+    const regularCount = count - mediaCount;
+
+    if (state.mediaQuestions.length < mediaCount || regularPool.length < regularCount) {
+      alert(`Недостаточно вопросов для теста с медиа. Нужно ${mediaCount} медиавопросов и ${regularCount} обычных вопросов.`);
+      return [];
+    }
+
+    return shuffle([
+      ...shuffle(state.mediaQuestions).slice(0, mediaCount),
+      ...shuffle(regularPool).slice(0, regularCount)
+    ]).map(shuffleQuestionOptions);
   }
 
-  const shuffledPool = shuffle(pool);
+  const shuffledPool = shuffle(regularPool);
   const actualCount = Math.min(count, shuffledPool.length);
 
   if (actualCount < count) {
@@ -603,6 +618,16 @@ function generateTestByMode(mode, count) {
   }
 
   return shuffledPool.slice(0, actualCount).map(shuffleQuestionOptions);
+}
+
+function filterQuestionsByMode(questions, mode) {
+  if (mode === "closed") {
+    return questions.filter(isClosedQuestion);
+  }
+  if (mode === "open") {
+    return questions.filter((question) => question.type === "open");
+  }
+  return questions;
 }
 
 function shuffleQuestionOptions(question) {
@@ -645,6 +670,10 @@ function isClosedQuestion(question) {
   return question.type === "single" || question.type === "multiple";
 }
 
+function isMediaQuestion(question) {
+  return Boolean(question.media || question.generated);
+}
+
 function isOpenAnswerCorrect(question, answer) {
   const normalizedAnswer = normalizeAnswer(answer);
   const variants = [question.correctAnswer, ...(question.accept || [])].filter(Boolean).map(normalizeAnswer);
@@ -675,6 +704,10 @@ function getTypeLabel(question) {
 
 function getSelectedValue(name, fallback) {
   return document.querySelector(`input[name="${name}"]:checked`)?.value || fallback;
+}
+
+function getCheckedValue(name) {
+  return Boolean(document.querySelector(`input[name="${name}"]`)?.checked);
 }
 
 function shuffle(items) {

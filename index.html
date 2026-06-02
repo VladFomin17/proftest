@@ -13,13 +13,9 @@
 </head>
 <body>
   <main class="app" id="appTop">
-    <header class="app-header">
+    <div class="logo-area">
       <img src="logoprofkom.jpg" alt="Логотип" class="logo-img">
-      <div>
-        <p class="eyebrow">Тренажер профтеста</p>
-        <h1>proftest</h1>
-      </div>
-    </header>
+    </div>
 
     <nav class="icon-nav" aria-label="Разделы">
       <button class="nav-icon active" type="button" data-tab="info" aria-label="Информация">
@@ -69,6 +65,8 @@
         <span class="selector-divider" aria-hidden="true"></span>
         <label><input type="radio" name="questionCount" value="20" checked> 20 вопросов</label>
         <label><input type="radio" name="questionCount" value="50"> 50 вопросов</label>
+        <span class="selector-divider" aria-hidden="true"></span>
+        <label><input type="checkbox" name="includeMedia" value="1"> Добавить медиа</label>
       </div>
       <div class="card centered" id="start-card">
         <p class="start-card-text">Выберите режим и количество вопросов, затем запустите генерацию.</p>
